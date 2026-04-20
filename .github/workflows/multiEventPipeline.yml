@@ -9,6 +9,7 @@ on:
   pull_request:  # Trigger on PR to master
     branches:
       - master
+  workflow_dispatch: 
 
 jobs:
   on-push:   # Job 1
