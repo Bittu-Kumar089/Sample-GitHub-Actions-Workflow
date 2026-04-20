@@ -4,6 +4,7 @@ on:
   push:   # Trigger when code is pushed
     branches:
       - master
+      - test
 
 jobs:
   on-push:   # Job name
