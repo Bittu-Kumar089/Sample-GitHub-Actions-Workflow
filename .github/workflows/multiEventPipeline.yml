@@ -1,45 +1,54 @@
-name: "Multi event pipeline / workflow"  # Name of the pipeline
+name: "Multi event pipeline / workflow"  # Workflow name
 
 on:
-  push:   # Trigger on push to master or test
+  push:   # Trigger when code is pushed
     branches:
       - master
       - test
 
-  pull_request:  # Trigger on PR to master
+  pull_request:   # Trigger on PR events
     branches:
       - master
-    types:
-        - closed
-        - opened
-  workflow_dispatch: 
+    types: [opened, closed]
+
+  workflow_dispatch:   # Manual trigger
 
 jobs:
-  on-push:   # Job 1
-    if: github.event_name == 'push'
+
+  # 🔹 Job 1: Push Event Job
+  on-push:
+    if: github.event_name == 'push'   # WHY: Run only for push event
     runs-on: ubuntu-latest
+
     steps:
       - name: "Running on master/test push"
         run: echo "Running on master/test push"
+        # WHY: Used for build/test in real projects
 
-  on-pull-request:   # Job 2
-    if: github.event_name == 'pull_request'
+  # 🔹 Job 2: Pull Request Job
+  on-pull-request:
+    if: github.event_name == 'pull_request'   # WHY: Run only for PR event
     runs-on: ubuntu-latest
+
     steps:
       - name: "Running on pull request"
         run: echo "Running on pull request"
+        # WHY: Base validation step
 
-  on-pull-request-closed:
-    if: github.event_name == 'pull_request' && github.event.action == 'closed'
-    runs-on: ubuntu-latest
-    steps:
-        - name: "Running on pull request closed"
-          run: echo "Running on pull request closed"
+      - name: "PR Opened"
+        if: github.event.action == 'opened'   # WHY: Trigger only when PR is created
+        run: echo "Pull request opened"
 
-  on-workflow-dispatch: #Job 3
-    if: github.event_name == 'workflow_dispatch'
+      - name: "PR Closed"
+        if: github.event.action == 'closed'   # WHY: Trigger when PR is merged/closed
+        run: echo "Pull request closed"
+
+  # 🔹 Job 3: Manual Trigger Job
+  on-workflow-dispatch:
+    if: github.event_name == 'workflow_dispatch'   # WHY: Run only on manual trigger
     runs-on: ubuntu-latest
+
     steps:
-      - name: "Running on workflow dispatch" #step 1
+      - name: "Running on workflow dispatch"
         run: echo "Running on workflow dispatch"
-        
+        # WHY: Used for testing or manual execution
