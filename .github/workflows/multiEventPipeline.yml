@@ -1,15 +1,26 @@
 name: "Multi event pipeline / workflow"  # Name of the pipeline
 
 on:
-  push:   # Trigger when code is pushed
+  push:   # Trigger on push to master or test
     branches:
       - master
       - test
 
+  pull_request:  # Trigger on PR to master
+    branches:
+      - master
+
 jobs:
-  on-push:   # Job name
-    runs-on: ubuntu-latest   # FIXED (runs-on)
+  on-push:   # Job 1
+    runs-on: ubuntu-latest
 
     steps:
-      - name: "Running on master push"
-        run: echo "Running on master push"
+      - name: "Running on master/test push"
+        run: echo "Running on master/test push"
+
+  on-pull-request:   # Job 2
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: "Running on pull request"
+        run: echo "Running on pull request"
